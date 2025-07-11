@@ -1,0 +1,43 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isOwner() {
+      return request.auth.token.role == 'owner';
+    }
+
+    function isWorker() {
+      return request.auth.token.role == 'worker';
+    }
+
+    function isOwnerOfData(userIdField) {
+      return request.resource.data[userIdField] == request.auth.uid;
+    }
+
+    // Owners have god-mode access
+    match /{document=**} {
+      allow read, write: if isOwner();
+    }
+
+    // --- Worker Rules ---
+    match /products/{productId} {
+      allow read: if isWorker();
+      allow write: if false; // Workers cannot modify products
+    }
+
+    match /sales/{saleId} {
+      allow create: if isWorker() && isOwnerOfData('workerId');
+      allow read, update, delete: if false; // Workers cannot view/edit past sales
+    }
+
+    match /expenses/{expenseId} {
+      allow create: if isWorker() && isOwnerOfData('workerId');
+      allow read, update, delete: if false;
+    }
+
+    // Workers cannot access these collections at all
+    match /notes/{noteId} { allow read, write: if false; }
+    match /inventoryLogs/{logId} { allow read, write: if false; }
+    match /users/{userId} { allow read, write: if false; }
+  }
+}

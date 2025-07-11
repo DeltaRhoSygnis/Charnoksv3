@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>Sari POS - AI Enhanced</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+      :root {
+        --font-sans: 'Poppins', sans-serif;
+      }
+      body {
+        font-family: var(--font-sans);
+        padding-top: env(safe-area-inset-top);
+        padding-bottom: env(safe-area-inset-bottom);
+        padding-left: env(safe-area-inset-left);
+        padding-right: env(safe-area-inset-right);
+      }
+      
+      /* THEME CSS VARIABLES */
+      .theme-charnoks {
+        --background-start-rgb: 219, 78, 42;
+        --background-end-rgb: 252, 185, 59;
+        --primary: 220 38 38;
+        --secondary: 245 158 11;
+        --accent: 253 224 71;
+        --text-primary: 255 255 255;
+        --text-secondary: 229 231 235;
+        --card-bg: 120 53 15 / 0.5;
+        --card-bg-solid: 120 53 15;
+        --border: 245 158 11 / 0.5;
+        --text-on-primary: 255 255 255;
+      }
+      .theme-ocean {
+        --background-start-rgb: 20, 30, 48;
+        --background-end-rgb: 36, 59, 85;
+        --primary: 59 130 246;
+        --secondary: 14 165 233;
+        --accent: 34 211 238;
+        --text-primary: 255 255 255;
+        --text-secondary: 209 213 219;
+        --card-bg: 36 59 85 / 0.4;
+        --card-bg-solid: 36 59 85;
+        --border: 59 130 246 / 0.4;
+        --text-on-primary: 255 255 255;
+      }
+      .theme-forest {
+        --background-start-rgb: 16, 26, 22;
+        --background-end-rgb: 42, 68, 55;
+        --primary: 34 197 94;
+        --secondary: 22 163 74;
+        --accent: 134 239 172;
+        --text-primary: 255 255 255;
+        --text-secondary: 229 231 235;
+        --card-bg: 22 101 52 / 0.4;
+        --card-bg-solid: 22 101 52;
+        --border: 34 197 94 / 0.4;
+        --text-on-primary: 255 255 255;
+      }
+      .theme-sunset {
+        --background-start-rgb: 76, 29, 149;
+        --background-end-rgb: 147, 51, 234;
+        --primary: 168 85 247;
+        --secondary: 192 132 252;
+        --accent: 233 213 255;
+        --text-primary: 255 255 255;
+        --text-secondary: 229 231 235;
+        --card-bg: 107 33 168 / 0.4;
+        --card-bg-solid: 107 33 168;
+        --border: 168 85 247 / 0.4;
+        --text-on-primary: 255 255 255;
+      }
+      .theme-light {
+        --background-start-rgb: 243, 244, 246;
+        --background-end-rgb: 229, 231, 235;
+        --primary: 37 99 235;
+        --secondary: 29 78 216;
+        --accent: 96 165 250;
+        --text-primary: 29 78 216;
+        --text-secondary: 55 65 81;
+        --card-bg: 255 255 255 / 0.8;
+        --card-bg-solid: 255 255 255;
+        --border: 209 213 219;
+        --text-on-primary: 255 255 255;
+      }
+      .theme-gray {
+        --background-start-rgb: 17, 24, 39;
+        --background-end-rgb: 55, 65, 81;
+        --primary: 107 114 128;
+        --secondary: 156 163 175;
+        --accent: 209 213 219;
+        --text-primary: 243 244 246;
+        --text-secondary: 209 213 219;
+        --card-bg: 75 85 99 / 0.4;
+        --card-bg-solid: 75 85 99;
+        --border: 107 114 128 / 0.4;
+        --text-on-primary: 17 24 39;
+      }
+      
+      /* NEW THEMES */
+      .theme-ruby {
+        --background-start-rgb: 159, 28, 52;
+        --background-end-rgb: 220, 38, 38;
+        --primary: 244 63 94;
+        --secondary: 251 113 133;
+        --accent: 253 164 175;
+        --text-primary: 255 255 255;
+        --text-secondary: 249 250 251;
+        --card-bg: 159 28 52 / 0.4;
+        --card-bg-solid: 159 28 52;
+        --border: 244 63 94 / 0.4;
+        --text-on-primary: 255 255 255;
+      }
+      .theme-cosmic {
+        --background-start-rgb: 28, 25, 47;
+        --background-end-rgb: 67, 56, 111;
+        --primary: 167 139 250;
+        --secondary: 196 181 253;
+        --accent: 129 140 248;
+        --text-primary: 255 255 255;
+        --text-secondary: 224 231 240;
+        --card-bg: 67 56 111 / 0.4;
+        --card-bg-solid: 67 56 111;
+        --border: 167 139 250 / 0.4;
+        --text-on-primary: 255 255 255;
+      }
+      .theme-golden {
+        --background-start-rgb: 234, 88, 12;
+        --background-end-rgb: 251, 146, 60;
+        --primary: 251 191 36;
+        --secondary: 252 211 77;
+        --accent: 253 230 138;
+        --text-primary: 255 255 255;
+        --text-secondary: 254 249 195;
+        --card-bg: 120 53 15 / 0.5;
+        --card-bg-solid: 120 53 15;
+        --border: 251 191 36 / 0.4;
+        --text-on-primary: 120 53 15;
+      }
+      .theme-emerald {
+        --background-start-rgb: 5, 46, 22;
+        --background-end-rgb: 6, 78, 59;
+        --primary: 16 185 129;
+        --secondary: 52 211 153;
+        --accent: 110 231 183;
+        --text-primary: 255 255 255;
+        --text-secondary: 229 231 235;
+        --card-bg: 6 95 70 / 0.4;
+        --card-bg-solid: 6 95 70;
+        --border: 16 185 129 / 0.4;
+        --text-on-primary: 255 255 255;
+      }
+
+      /* ANIMATIONS */
+      @keyframes gradient-x {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+      }
+      .animate-gradient-x {
+        background: linear-gradient(-45deg, rgba(var(--background-start-rgb), 1), rgba(var(--background-end-rgb), 1), rgba(var(--background-start-rgb), 1), rgba(var(--background-end-rgb), 1));
+        background-size: 400% 400%;
+        animation: gradient-x 15s ease infinite;
+      }
+      
+      @keyframes bounce-in {
+        0% { opacity: 0; transform: scale(0.3); }
+        50% { opacity: 1; transform: scale(1.05); }
+        70% { transform: scale(0.9); }
+        100% { transform: scale(1); }
+      }
+      .animate-bounce-in {
+        animation: bounce-in 0.6s ease-out;
+      }
+
+      @keyframes slide-in-bottom {
+        from { transform: translateY(100%); opacity: 0; }
+        to { transform: translateY(0); opacity: 1; }
+      }
+      .animate-slide-in-bottom {
+        animation: slide-in-bottom 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+      }
+      
+      /* Login page animations */
+      @keyframes float {
+        0% { transform: translate(0, 0px); }
+        50% { transform: translate(10px, 15px); }
+        100% { transform: translate(0, -0px); }
+      }
+      @keyframes pulse {
+        0%, 100% { box-shadow: 0 0 20px 5px rgba(var(--primary), 0.2); }
+        50% { box-shadow: 0 0 35px 12px rgba(var(--primary), 0.4); }
+      }
+      .orb {
+          animation: float 12s ease-in-out infinite, pulse 5s ease-in-out infinite;
+      }
+      
+      /* New Shimmer Animation */
+      @keyframes shimmer {
+        0% { background-position: -100% 0; }
+        100% { background-position: 100% 0; }
+      }
+      .hover-shimmer::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(110deg, rgba(255, 255, 255, 0) 40%, rgba(255, 255, 255, 0.1) 50%, rgba(255, 255, 255, 0) 60%);
+        background-size: 200% 100%;
+        transition: opacity 0.3s ease;
+        opacity: 0;
+        pointer-events: none;
+      }
+      .hover-shimmer:hover::after {
+        opacity: 1;
+        animation: shimmer 1.5s infinite;
+      }
+    </style>
+  <script type="importmap">
+{
+  "imports": {
+    "react": "https://esm.sh/react@18.2.0",
+    "react-dom/client": "https://esm.sh/react-dom@18.2.0/client",
+    "react-router-dom": "https://esm.sh/react-router-dom@6.23.0?deps=react@18.2.0",
+    "@google/genai": "https://esm.sh/@google/genai@0.8.0",
+    "recharts": "https://esm.sh/recharts@2.12.7?deps=react@18.2.0,react-dom@18.2.0",
+    "react-dom/": "https://esm.sh/react-dom@18.2.0/",
+    "react/": "https://esm.sh/react@18.2.0/"
+  }
+}
+</script>
+<link rel="stylesheet" href="/index.css">
+</head>
+  <body class="bg-gray-900 text-white antialiased">
+    <div id="root"></div>
+    <script type="module" src="/index.tsx"></script>
+  </body>
+</html>
