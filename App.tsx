@@ -1,5 +1,3 @@
-
-
 import React, { useEffect } from 'react';
 import { HashRouter, Routes, Route, Navigate, useLocation, Outlet } from 'react-router-dom';
 import { useTheme, ThemeProvider } from './hooks/useTheme';
@@ -19,6 +17,7 @@ import TransactionsPage from './pages/TransactionsPage';
 import NotesPage from './pages/NotesPage';
 import SettingsPage from './pages/SettingsPage';
 import LoginPage from './pages/LoginPage';
+import SignUpPage from './pages/SignUpPage';
 import Spinner from './components/ui/Spinner';
 import SalesPage from './pages/SalesPage';
 
@@ -87,6 +86,7 @@ const AppContent: React.FC = () => {
   return (
       <Routes>
         <Route path="/login" element={<LoginPage />} />
+        <Route path="/signup" element={<SignUpPage />} />
         
         {/* Protected routes are nested under AuthLayout */}
         <Route element={<AuthLayout />}>
