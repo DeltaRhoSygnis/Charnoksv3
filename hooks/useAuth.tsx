@@ -33,6 +33,39 @@ const MOCK_WORKER: User = {
     role: 'worker',
 };
 
+const MOCK_USERS_KEY = 'mock-users';
+const AUTH_USER_KEY = 'auth-user';
+
+
+// Helper to get all users from our mock DB
+const getMockUsers = (): User[] => {
+    try {
+        const storedUsers = window.localStorage.getItem(MOCK_USERS_KEY);
+        if (storedUsers) {
+            return JSON.parse(storedUsers);
+        }
+    } catch (error) {
+        console.error("Could not read users from localStorage", error);
+    }
+    // If nothing is stored, seed with initial users
+    const initialUsers = [MOCK_OWNER, MOCK_WORKER];
+    try {
+        window.localStorage.setItem(MOCK_USERS_KEY, JSON.stringify(initialUsers));
+    } catch (error) {
+        console.error("Could not save initial users to localStorage", error);
+    }
+    return initialUsers;
+};
+
+// Helper to save users to our mock DB
+const saveMockUsers = (users: User[]) => {
+    try {
+        window.localStorage.setItem(MOCK_USERS_KEY, JSON.stringify(users));
+    } catch (error) {
+        console.error("Could not save users to localStorage", error);
+    }
+};
+
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
@@ -40,7 +73,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   useEffect(() => {
     // Check for a saved user session in localStorage
     try {
-      const savedUser = window.localStorage.getItem('auth-user');
+      getMockUsers(); // This will seed the user DB if it doesn't exist.
+      const savedUser = window.localStorage.getItem(AUTH_USER_KEY);
       if (savedUser) {
         setUser(JSON.parse(savedUser));
       }
@@ -53,22 +87,18 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const login = useCallback(async (email: string, pass: string) => {
     setLoading(true);
-    // Simulate API call to Firebase Auth
+    // Simulate API call
     return new Promise<void>((resolve, reject) => {
         setTimeout(() => {
-            let userToLogin: User | null = null;
-            if (email === MOCK_OWNER.email) {
-                userToLogin = MOCK_OWNER;
-            } else if (email === MOCK_WORKER.email) {
-                userToLogin = MOCK_WORKER;
-            }
+            const allUsers = getMockUsers();
+            const userToLogin = allUsers.find(u => u.email === email);
 
             if (userToLogin && pass === 'password') { // Basic validation for mock
                 try {
-                    window.localStorage.setItem('auth-user', JSON.stringify(userToLogin));
+                    window.localStorage.setItem(AUTH_USER_KEY, JSON.stringify(userToLogin));
                     setUser(userToLogin);
                     resolve();
-                } catch (error) => {
+                } catch (error) {
                     reject(new Error("Failed to save session."));
                 }
             } else {
@@ -81,23 +111,29 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     const signup = useCallback(async (name: string, email: string, pass: string) => {
         setLoading(true);
-        // Simulate API call to create and log in a new user.
-        // The public sign-up should create an 'owner'.
+        // Simulate creating and logging in a new 'owner' user.
         return new Promise<void>((resolve, reject) => {
             setTimeout(() => {
                 try {
-                    if (email === MOCK_OWNER.email || email === MOCK_WORKER.email) {
+                    const allUsers = getMockUsers();
+                    if (allUsers.some(u => u.email === email)) {
+                        setLoading(false);
                         return reject(new Error("An account with this email already exists."));
                     }
     
                     const newUser: User = {
                         uid: `owner-${Date.now()}`,
-                        email: email,
-                        name: name,
-                        role: 'owner', // Public signup creates an owner
+                        email,
+                        name,
+                        role: 'owner',
                     };
                     
-                    window.localStorage.setItem('auth-user', JSON.stringify(newUser));
+                    // Add new user to our mock "database"
+                    const updatedUsers = [...allUsers, newUser];
+                    saveMockUsers(updatedUsers);
+
+                    // Set current session
+                    window.localStorage.setItem(AUTH_USER_KEY, JSON.stringify(newUser));
                     setUser(newUser);
                     resolve();
 
@@ -112,7 +148,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const logout = useCallback(() => {
     try {
-        window.localStorage.removeItem('auth-user');
+        window.localStorage.removeItem(AUTH_USER_KEY);
         setUser(null);
     } catch (error) {
         console.error("Could not remove user from localStorage", error);
@@ -120,16 +156,29 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, []);
 
   const createWorker = useCallback(async (name: string, email: string, pass: string) => {
-    // Simulate API call to create a new worker account without logging in.
-    console.log(`Creating worker: ${name} with email: ${email}`);
+    // Simulate creating a new worker account.
     return new Promise<void>((resolve, reject) => {
         setTimeout(() => {
-            if (email === MOCK_OWNER.email || email === MOCK_WORKER.email) {
-                return reject(new Error("An account with this email already exists."));
+            try {
+                const allUsers = getMockUsers();
+                if (allUsers.some(u => u.email === email)) {
+                    return reject(new Error("An account with this email already exists."));
+                }
+
+                const newWorker: User = {
+                    uid: `worker-${Date.now()}`,
+                    email,
+                    name,
+                    role: 'worker',
+                };
+                
+                const updatedUsers = [...allUsers, newWorker];
+                saveMockUsers(updatedUsers);
+                
+                resolve();
+            } catch (error) {
+                reject(new Error("Failed to create worker account."));
             }
-            // In a real app, this would call a backend function which might fail.
-            // For this mock, we'll just resolve successfully.
-            resolve();
         }, 1000);
     });
   }, []);
