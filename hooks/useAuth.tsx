@@ -1,4 +1,3 @@
-
 import React, { createContext, useState, useContext, useMemo, useCallback, useEffect } from 'react';
 
 // This would typically come from Firebase Auth, but we'll mock it for now.
@@ -13,6 +12,7 @@ interface AuthContextType {
   user: User | null;
   loading: boolean;
   login: (email: string, pass: string) => Promise<void>;
+  signup: (name: string, email: string, pass: string) => Promise<void>;
   logout: () => void;
   createWorker: (name: string, email: string, pass: string) => Promise<void>;
 }
@@ -79,6 +79,36 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     });
   }, []);
 
+    const signup = useCallback(async (name: string, email: string, pass: string) => {
+        setLoading(true);
+        // Simulate API call to create and log in a new user
+        return new Promise<void>((resolve, reject) => {
+            setTimeout(() => {
+                try {
+                    if (email === MOCK_OWNER.email || email === MOCK_WORKER.email) {
+                        return reject(new Error("An account with this email already exists."));
+                    }
+    
+                    const newUser: User = {
+                        uid: `worker-${Date.now()}`,
+                        email: email,
+                        name: name,
+                        role: 'worker',
+                    };
+                    
+                    window.localStorage.setItem('auth-user', JSON.stringify(newUser));
+                    setUser(newUser);
+                    resolve();
+
+                } catch (error) {
+                    reject(new Error("Failed to create session."));
+                } finally {
+                    setLoading(false);
+                }
+            }, 1500);
+        });
+    }, []);
+
   const logout = useCallback(() => {
     try {
         window.localStorage.removeItem('auth-user');
@@ -89,15 +119,21 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, []);
 
   const createWorker = useCallback(async (name: string, email: string, pass: string) => {
-    // Simulate API call to create a new worker
+    // Simulate API call to create a new worker account without logging in.
     console.log(`Creating worker: ${name} with email: ${email}`);
-    // In a real app, this would call a backend function which might fail.
-    await new Promise(res => setTimeout(res, 1000));
-    // For this mock, we'll just resolve successfully.
-    return Promise.resolve();
+    return new Promise<void>((resolve, reject) => {
+        setTimeout(() => {
+            if (email === MOCK_OWNER.email || email === MOCK_WORKER.email) {
+                return reject(new Error("An account with this email already exists."));
+            }
+            // In a real app, this would call a backend function which might fail.
+            // For this mock, we'll just resolve successfully.
+            resolve();
+        }, 1000);
+    });
   }, []);
 
-  const value = useMemo(() => ({ user, loading, login, logout, createWorker }), [user, loading, login, logout, createWorker]);
+  const value = useMemo(() => ({ user, loading, login, signup, logout, createWorker }), [user, loading, login, signup, logout, createWorker]);
 
   return (
     <AuthContext.Provider value={value}>
