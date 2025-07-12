@@ -53,7 +53,7 @@ export const getSalesForecast = async (sales: Sale[]): Promise<ForecastDataPoint
   const prompt = generatePromptForForecast(sales);
   try {
     const response: GenerateContentResponse = await ai.models.generateContent({
-        model: "gemini-2.5-flash",
+        model: "gemini-2.0-flash",
         contents: prompt,
         config: {
           responseMimeType: "application/json",
@@ -96,7 +96,7 @@ export const getBusinessInsights = async (sales: Sale[], expenses: Expense[]): P
     const prompt = generatePromptForInsights(sales, expenses);
     try {
         const response: GenerateContentResponse = await ai.models.generateContent({
-            model: "gemini-2.5-flash",
+            model: "gemini-2.0-flash",
             contents: prompt,
             config: {
                 responseMimeType: "application/json",
@@ -222,7 +222,7 @@ export const getAIAssistantResponse = async (
     const productList = products.map(p => ({ name: p.name, price: p.price, stock: p.stock, category: p.category }));
 
     const systemInstruction = `
-        You are a helpful business assistant for a Point of Sale (POS) system called "Sari POS".
+        You are a helpful business assistant for a Point of Sale (POS) system called "Charnoks".
         Your role is to analyze the provided business data and answer the user's questions in a clear, concise, and friendly manner.
         You should provide actionable insights, summaries, and answers based ONLY on the data given.
         When asked for suggestions, be creative but realistic for a small business.
@@ -243,7 +243,7 @@ export const getAIAssistantResponse = async (
 
     try {
         const response: GenerateContentResponse = await ai.models.generateContent({
-            model: "gemini-2.5-flash",
+            model: "gemini-2.0-flash",
             contents: [...geminiHistory, { role: 'user', parts: [{ text: query }] }],
             config: {
               systemInstruction: systemInstruction,
