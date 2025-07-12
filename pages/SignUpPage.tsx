@@ -67,7 +67,7 @@ const SignUpPage: React.FC = () => {
         setIsSigningUp(true);
         try {
             await auth.signup(name, email, password);
-            navigate('/worker/dashboard', { replace: true });
+            navigate('/owner/dashboard', { replace: true });
         } catch (err: any) {
             setError(err.message || "Failed to create an account. Please try again.");
         } finally {
@@ -82,7 +82,7 @@ const SignUpPage: React.FC = () => {
                     <LogoIcon />
                 </div>
 
-                <h2 className="text-3xl font-bold text-center text-white animate-bounce-in" style={{animationDelay: '200ms'}}>Create Your Account</h2>
+                <h2 className="text-3xl font-bold text-center text-white animate-bounce-in" style={{animationDelay: '200ms'}}>Create Owner Account</h2>
 
                 <form className="space-y-5 animate-bounce-in" style={{animationDelay: '300ms'}} onSubmit={handleSignUp}>
                     <div>
