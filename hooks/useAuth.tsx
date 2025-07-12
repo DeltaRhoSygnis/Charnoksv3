@@ -68,7 +68,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
                     window.localStorage.setItem('auth-user', JSON.stringify(userToLogin));
                     setUser(userToLogin);
                     resolve();
-                } catch (error) {
+                } catch (error) => {
                     reject(new Error("Failed to save session."));
                 }
             } else {
@@ -81,7 +81,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     const signup = useCallback(async (name: string, email: string, pass: string) => {
         setLoading(true);
-        // Simulate API call to create and log in a new user
+        // Simulate API call to create and log in a new user.
+        // The public sign-up should create an 'owner'.
         return new Promise<void>((resolve, reject) => {
             setTimeout(() => {
                 try {
@@ -90,10 +91,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
                     }
     
                     const newUser: User = {
-                        uid: `worker-${Date.now()}`,
+                        uid: `owner-${Date.now()}`,
                         email: email,
                         name: name,
-                        role: 'worker',
+                        role: 'owner', // Public signup creates an owner
                     };
                     
                     window.localStorage.setItem('auth-user', JSON.stringify(newUser));
