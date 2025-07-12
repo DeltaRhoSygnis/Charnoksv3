@@ -2,7 +2,7 @@
 import { GoogleGenAI, GenerateContentResponse, Type } from "@google/genai";
 import type { Sale, ForecastDataPoint, AIInsights, Expense, Product, ParsedSaleFromAI } from '../types';
 
-const API_KEY = process.env.API_KEY;
+const API_KEY = import.meta.env.VITE_API_KEY;
 
 if (!API_KEY) {
   console.warn("API_KEY environment variable not set. AI features will be disabled.");
