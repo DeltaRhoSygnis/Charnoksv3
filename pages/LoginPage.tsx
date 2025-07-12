@@ -1,6 +1,5 @@
-
 import React, { useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import * as ReactRouterDOM from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import Spinner from '../components/ui/Spinner';
 
@@ -38,8 +37,8 @@ const LogoIcon = () => (
 );
 
 const LoginPage: React.FC = () => {
-    const navigate = useNavigate();
-    const location = useLocation();
+    const navigate = ReactRouterDOM.useNavigate();
+    const location = ReactRouterDOM.useLocation();
     const auth = useAuth();
     
     const [email, setEmail] = useState('');
@@ -182,7 +181,7 @@ const LoginPage: React.FC = () => {
                 </div>
 
                 <p className="text-center text-sm text-white/60 animate-bounce-in" style={{animationDelay: '500ms'}}>
-                    Don't have an account? <a href="#" className="font-medium text-white/80 hover:text-white">Sign Up</a>
+                    Don't have an account? <ReactRouterDOM.Link to="/signup" className="font-medium text-white/80 hover:text-white">Sign Up</ReactRouterDOM.Link>
                 </p>
             </div>
         </div>
