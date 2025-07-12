@@ -5,11 +5,7 @@ export default defineConfig({
     plugins: [react()],
     server: {
         port: 5173,
-        cors: true,
-        headers: {
-            'Content-Type': 'application/javascript',
-            'Access-Control-Allow-Origin': '*'
-        }
+        cors: true
     },
     build: {
         target: 'esnext',
